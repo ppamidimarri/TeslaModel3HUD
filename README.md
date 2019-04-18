@@ -30,3 +30,7 @@ To-do wishlist (not sure if these are all possible using CAN data):
 * [unclutter](https://wiki.archlinux.org/index.php/unclutter)
 * [PyGObject](https://pygobject.readthedocs.io/en/latest/index.html)
 
+## Thanks
+This project owes a lot to the following people who helped me:
+* [JWardell](https://teslaownersonline.com/members/jwardell.1513/) at the Tesla Owners Online forums
+* [Collin80](https://github.com/collin80) here at Github

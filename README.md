@@ -6,11 +6,11 @@ This HUD displays similar information to what is shown on the top left of the Te
 
 * Current date and time, converted from UTC to local time at the beginning of the drive
 * Current speed when driving, "P" when parked, "H" when brake hold is active
+* Turn signal state (may not blink exactly like the car display though)
 * Current "gear" state (i.e. P/R/N/D)
 * Current state-of-charge in percentage 
 
 To-do wishlist (not sure if these are all possible using CAN data):
-* Turn signal indicator 
 * Next navigation step
 * Reduce display brightness when the car display switches to night mode
 * Current TACC speed if cruise is enabled

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="mainPanel">
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkTable" id="table1">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="n_rows">3</property>
+        <property name="n_columns">3</property>
+        <property name="homogeneous">True</property>
+        <child>
+          <object class="GtkLabel" id="Date">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xalign">0.10000000149011612</property>
+            <property name="yalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="Blank 3">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="yalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="Blank 1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="Speed">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="Blank 2">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xalign">0.89999997615814209</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">3</property>
+            <property name="top_attach">1</property>
+            <property name="bottom_attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="Time">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xalign">0.89999997615814209</property>
+            <property name="yalign">0.10000000149011612</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="SpeedUnit">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="yalign">0.89999997615814209</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="SOC">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xalign">0.89999997615814209</property>
+            <property name="yalign">0.89999997615814209</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="right_attach">3</property>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkTable" id="table2">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="n_columns">8</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkLabel" id="P">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="yalign">0.89999997615814209</property>
+                <property name="label" translatable="yes">label</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="R">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="yalign">0.89999997615814209</property>
+                <property name="label" translatable="yes">label</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="N">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="yalign">0.89999997615814209</property>
+                <property name="label" translatable="yes">label</property>
+              </object>
+              <packing>
+                <property name="left_attach">2</property>
+                <property name="right_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="D">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="yalign">0.89999997615814209</property>
+                <property name="label" translatable="yes">label</property>
+              </object>
+              <packing>
+                <property name="left_attach">3</property>
+                <property name="right_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

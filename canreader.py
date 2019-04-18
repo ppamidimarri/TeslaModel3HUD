@@ -1,0 +1,203 @@
+import serial, threading, datetime
+
+LOG_LEVEL = 1 # 1=errors, 2=info, 3=debug
+
+class CANReader:
+	def __init__(self, port="/dev/ttyUSB0", baudrate=1000000, log_level=None):
+		self.ser = serial.Serial(port, baudrate)
+		self.sep = b'\xf1\x00'
+		self.speed = "-"
+		self.gear = 2
+		self.drive_state = 0
+		self.brake_hold = 0
+		self.soc = 0
+		self.timestamp = datetime.datetime.utcnow()
+		self.latitude = 0 # 37.7749
+		self.longitude = 0 # -122.4194
+		self.batt_cap_ful = 0
+		self.batt_cap_rem = 0
+		self.batt_cap_exp = 0
+		self.batt_cap_idl = 0
+		self.batt_cap_buf = 0
+
+		if log_level is None:
+			self.log_level = LOG_LEVEL
+		else:
+			self.log_level = log_level
+
+		self.read_thread = threading.Thread(target=self.read, args=())
+		self.stop_reading = False
+		self.read_thread.daemon = True
+		self.read_thread.start()
+
+	def log(self, level, text):
+		if level <= self.log_level:
+			print(text)
+
+	def close(self):
+		self.stop_reading = True
+		self.ser.flush()
+		self.ser.close()
+
+	# Read CAN messages, this runs in a background thread
+
+	def read(self):
+		while not self.stop_reading:
+			line = self.ser.readline()
+
+			parts = line.partition(self.sep)
+			while True:
+				frame = parts[0]
+				mlen = len(frame)
+				if mlen > 8:
+					frame_id = frame[4] + 256 * (frame[5] + 256 * (frame[6] + 256 * frame[7]))
+					if frame_id == 0x257 and mlen > 12: # UI speed
+						self.speed = frame[12]
+					elif frame_id == 0x118 and mlen > 12: # Gear and Brake Hold status
+						self.process_drive_state_signal(frame[11], frame[12])
+					elif frame_id == 0x318 and mlen > 14: # UTC Timestamp
+						self.process_timestamp_signal(frame[9:])
+					elif frame_id == 0x292 and mlen > 10: # State of Charge
+						self.soc = self.process_soc_signal(frame[9], frame[10])
+					elif frame_id == 0x04F and mlen > 10: # Location
+						self.process_location_signal(frame[9:])
+						self.log(2, "Latitude: {0}, Longitude: {1}, {2}".format(
+							self.latitude, self.longitude, self.format_frame(frame[9:])))
+					elif frame_id == 0x352 and mlen > 15: # Battery Capacity
+						self.process_battery_capacity_signal(frame[9:])
+					else:
+#						self.log(2, "Unknown Frame ID: {0:03x}, {1}".format(frame_id, self.format_frame(frame[9:])))
+						pass
+				else:
+#					self.log(1, "Bad Length: {0}, {1}".format(mlen, self.format_frame(frame)))
+					pass
+				parts = parts[2].partition(self.sep)
+				if len(parts[2]) <= 0:
+					break
+
+	# Process various CAN messages to extract relevant data
+
+	def process_battery_capacity_signal(self, bytes):
+		signal = ""
+		for b in reversed(bytes):
+			signal += "{0:08b}".format(b)
+		self.batt_cap_ful = int(signal[-10:], 2)/10
+		self.batt_cap_rem = int(signal[-20:-10], 2)/10
+		self.batt_cap_exp = int(signal[-30:-20], 2)/10
+		self.batt_cap_idl = int(signal[-40:-30], 2)/10
+		self.batt_cap_buf = int(signal[-58:-50], 2)/10
+		self.log(3, "Battery Capacity Signal: {0}, Full: {1}, Remaining: {2}, Expected: {3}, Ideal: {4}, Buffer: {5}".format(
+			self.format_frame(bytes), self.batt_cap_ful, self.batt_cap_rem,
+			self.batt_cap_exp, self.batt_cap_idl, self.batt_cap_buf))
+
+	def process_timestamp_signal(self, bytes):
+		year = bytes[0] + 2000
+		month = bytes[1]
+		second = bytes[2]
+		hour = bytes[3]
+		day = bytes[4]
+		minute = bytes[5]
+		if self.is_valid_date(year, month, day, hour, minute, second):
+			self.timestamp = datetime.datetime(year, month, day, hour, minute, second)
+		else:
+			self.log(1, "Bad date, yr: {0}, mon: {1}, day: {2}, hr: {3}, min: {4}, sec: {5}, {6}".format(
+				year, month, day, hour, minute, second, self.format_frame(bytes)))
+
+	def process_location_signal(self, bytes):
+		signal = ""
+		for b in reversed(bytes):
+			signal += "{0:08b}".format(b)
+		self.latitude = int(signal[-28:], 2)
+		self.longitude = int(signal[-57:-28], 2)
+		self.log(0, "Location Signal: {0}, Latitude: {1}, Longitude: {2}".format(signal, self.latitude, self.longitude))
+
+	def process_soc_signal(self, byte1, byte2):
+		binary1 = "{0:08b}".format(byte1)
+		binary2 = "{0:08b}".format(byte2)
+		value = binary2[6:] + binary1
+		self.log(3, "SOC Full Bytes: {1}{0}, Value Binary: {2}, Value: {3}".format(binary1, binary2, value, int(value, 2)/10))
+		return int(value, 2)/10
+
+	def process_drive_state_signal(self, byte1, byte2):
+		binary1 = "{0:08b}".format(byte1)
+		binary2 = "{0:08b}".format(byte2)
+		self.log(3, "Drive State Full Bytes: {5}{0}, Gear Bin: {1}, Gear Dec: {2}, State Bin: {3}, State Dec: {4}, Hold: {6}".format(
+			binary1, binary1[1:4], int(binary1[1:4], 2), binary1[5:], int(binary1[5:], 2), binary2, binary2[5]))
+		self.gear = int(binary1[1:4], 2)
+		self.drive_state = int(binary1[5:], 2)
+		self.brake_hold = int(binary2[5], 2)
+
+	# Utilities for processing data
+
+	def format_frame(self, frame):
+		buf = "Frame Hex: "
+		for b in frame:
+			buf += "{0}-".format(hex(b))
+		buf = buf[:-1]
+		buf += " Frame Dec: "
+		for b in frame:
+			buf += "{0}-".format(b)
+		return buf[:-1]
+
+	def is_valid_date(self, year, month, day, hour, minute, second):
+		if year < 2000 or year > 2100:
+			return False
+		elif month < 1 or month > 12:
+			return False
+		elif day < 1 or day > 31:
+			return False
+		elif hour < 0 or hour > 23:
+			return False
+		elif minute < 0 or minute > 59:
+			return False
+		elif second < 0 or second > 59:
+			return False
+		else:
+			return True
+
+	# Make data available for display
+
+	def get_speed(self):
+		return self.speed
+
+	def get_gear(self):
+		gear_map = {
+			0: "D",
+			2: "P",
+			4: "R",
+			6: "N"
+		}
+		self.log(3, "Display Gear: {0}".format(gear_map.get(self.gear, "-")))
+		return gear_map.get(self.gear, "-")
+
+	def get_drive_state(self):
+		drive_state_map = {
+			0: "Idle",
+			1: "Charge",
+			2: "Park",
+			5: "Drive"
+		}
+		self.log(0, "Display Drive State: {0}".format(drive_state_map.get(self.drive_state, "-")))
+		return drive_state_map.get(self.drive_state, "-")
+
+	def get_brake_hold(self):
+		self.log(3, "Display Hold: {0}".format(self.brake_hold))
+		return self.brake_hold
+
+	def get_soc(self):
+		return self.soc
+
+	def get_timestamp(self):
+		return self.timestamp
+
+	def get_latitude(self):
+		return self.latitude
+
+	def get_longitude(self):
+		return self.longitude
+
+	def get_battery_capacity(self):
+		soc = 0
+		if self.batt_cap_ful != 0:
+			soc = 100*(self.batt_cap_rem - self.batt_cap_buf)/(self.batt_cap_ful - self.batt_cap_buf)
+		return soc

@@ -12,8 +12,6 @@ class CANReader:
 		self.brake_hold = 0
 		self.soc = 0
 		self.timestamp = datetime.datetime.utcnow()
-		self.latitude = 0 # 37.7749
-		self.longitude = 0 # -122.4194
 		self.batt_cap_ful = 0
 		self.batt_cap_rem = 0
 		self.batt_cap_exp = 0
@@ -59,10 +57,6 @@ class CANReader:
 						self.process_timestamp_signal(frame[9:])
 					elif frame_id == 0x292 and mlen > 10: # State of Charge
 						self.soc = self.process_soc_signal(frame[9], frame[10])
-					elif frame_id == 0x04F and mlen > 10: # Location
-						self.process_location_signal(frame[9:])
-						self.log(2, "Latitude: {0}, Longitude: {1}, {2}".format(
-							self.latitude, self.longitude, self.format_frame(frame[9:])))
 					elif frame_id == 0x352 and mlen > 15: # Battery Capacity
 						self.process_battery_capacity_signal(frame[9:])
 					else:
@@ -86,9 +80,6 @@ class CANReader:
 		self.batt_cap_exp = int(signal[-30:-20], 2)/10
 		self.batt_cap_idl = int(signal[-40:-30], 2)/10
 		self.batt_cap_buf = int(signal[-58:-50], 2)/10
-		self.log(3, "Battery Capacity Signal: {0}, Full: {1}, Remaining: {2}, Expected: {3}, Ideal: {4}, Buffer: {5}".format(
-			self.format_frame(bytes), self.batt_cap_ful, self.batt_cap_rem,
-			self.batt_cap_exp, self.batt_cap_idl, self.batt_cap_buf))
 
 	def process_timestamp_signal(self, bytes):
 		year = bytes[0] + 2000
@@ -103,26 +94,15 @@ class CANReader:
 			self.log(1, "Bad date, yr: {0}, mon: {1}, day: {2}, hr: {3}, min: {4}, sec: {5}, {6}".format(
 				year, month, day, hour, minute, second, self.format_frame(bytes)))
 
-	def process_location_signal(self, bytes):
-		signal = ""
-		for b in reversed(bytes):
-			signal += "{0:08b}".format(b)
-		self.latitude = int(signal[-28:], 2)
-		self.longitude = int(signal[-57:-28], 2)
-		self.log(0, "Location Signal: {0}, Latitude: {1}, Longitude: {2}".format(signal, self.latitude, self.longitude))
-
 	def process_soc_signal(self, byte1, byte2):
 		binary1 = "{0:08b}".format(byte1)
 		binary2 = "{0:08b}".format(byte2)
 		value = binary2[6:] + binary1
-		self.log(3, "SOC Full Bytes: {1}{0}, Value Binary: {2}, Value: {3}".format(binary1, binary2, value, int(value, 2)/10))
 		return int(value, 2)/10
 
 	def process_drive_state_signal(self, byte1, byte2):
 		binary1 = "{0:08b}".format(byte1)
 		binary2 = "{0:08b}".format(byte2)
-		self.log(3, "Drive State Full Bytes: {5}{0}, Gear Bin: {1}, Gear Dec: {2}, State Bin: {3}, State Dec: {4}, Hold: {6}".format(
-			binary1, binary1[1:4], int(binary1[1:4], 2), binary1[5:], int(binary1[5:], 2), binary2, binary2[5]))
 		self.gear = int(binary1[1:4], 2)
 		self.drive_state = int(binary1[5:], 2)
 		self.brake_hold = int(binary2[5], 2)
@@ -167,7 +147,6 @@ class CANReader:
 			4: "R",
 			6: "N"
 		}
-		self.log(3, "Display Gear: {0}".format(gear_map.get(self.gear, "-")))
 		return gear_map.get(self.gear, "-")
 
 	def get_drive_state(self):
@@ -177,11 +156,9 @@ class CANReader:
 			2: "Park",
 			5: "Drive"
 		}
-		self.log(0, "Display Drive State: {0}".format(drive_state_map.get(self.drive_state, "-")))
 		return drive_state_map.get(self.drive_state, "-")
 
 	def get_brake_hold(self):
-		self.log(3, "Display Hold: {0}".format(self.brake_hold))
 		return self.brake_hold
 
 	def get_soc(self):

@@ -41,19 +41,6 @@ class HeadUpDisplay(Gtk.Window):
 		self.builder.get_object("Blank 2").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
 		self.builder.get_object("Blank 3").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
 
-#		style_provider = Gtk.CssProvider()
-#		css = b"""
-#		GtkProgressBar {
-#			-GtkProgressBar-min-height: 100;
-#			-GtkProgressBar-border-color: #FFFFFF;
-#		}
-#		"""
-#		style_provider.load_from_data(css)
-#		Gtk.StyleContext.add_provider_for_screen(
-#			Gdk.Screen.get_default(), style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-
-#		self.builder.get_object("SOCBar").modify_bg(Gtk.STATE_PRELIGHT, Gdk.color_parse("yellow"))
-
 		self.update_data()
 		self.update_system_date()
 
@@ -65,8 +52,6 @@ class HeadUpDisplay(Gtk.Window):
 		stamp = self.get_local_timestamp()
 
 		self.builder.get_object("SOC").set_markup(self.soc_markup.format(self.get_text_color(), soc))
-#		if soc > 0 and soc < 100:
-#			self.builder.get_object("SOCBar").set_fraction(soc/100)
 		self.builder.get_object("Time").set_markup(
 			self.time_markup.format(self.get_text_color(), stamp.strftime(self.time_format).upper()))
 		self.builder.get_object("Date").set_markup(

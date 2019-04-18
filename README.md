@@ -30,6 +30,20 @@ To-do wishlist (not sure if these are all possible using CAN data):
 * [unclutter](https://wiki.archlinux.org/index.php/unclutter)
 * [PyGObject](https://pygobject.readthedocs.io/en/latest/index.html)
 
+## Pictures
+
+HUD in action
+![HUD in action](https://i.imgur.com/tpscMLz.jpg)
+
+Driver's view of HUD
+![Driver's view of HUD](https://i.imgur.com/9UdMikN.jpg)
+
+Side view of monitor and mirror mounts
+![Side view of mounts](https://thingiverse-production-new.s3.amazonaws.com/assets/ca/d1/42/7c/10/IMG_20190316_120601.jpg)
+
+Close front view of HUD
+![Close front view of HUD](https://thingiverse-production-new.s3.amazonaws.com/assets/f6/e7/c7/c6/02/IMG_20190316_121405.jpg)
+
 ## Thanks
 This project owes a lot to the following people who helped me:
 * [JWardell](https://teslaownersonline.com/members/jwardell.1513/) at the Tesla Owners Online forums

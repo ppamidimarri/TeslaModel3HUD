@@ -15,8 +15,8 @@
           <object class="GtkLabel" id="Date">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.10000000149011612</property>
-            <property name="yalign">0.10000000149011612</property>
+            <property name="xalign">0.1</property>
+            <property name="yalign">0.1</property>
             <property name="label" translatable="yes">label</property>
           </object>
         </child>
@@ -24,7 +24,7 @@
           <object class="GtkLabel" id="Blank 3">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="yalign">0.10000000149011612</property>
+            <property name="yalign">0.1</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
@@ -36,7 +36,7 @@
           <object class="GtkLabel" id="Blank 1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.10000000149011612</property>
+            <property name="xalign">0.1</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
@@ -61,7 +61,7 @@
           <object class="GtkLabel" id="Blank 2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.89999997615814209</property>
+            <property name="xalign">0.9</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
@@ -75,8 +75,8 @@
           <object class="GtkLabel" id="Time">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.89999997615814209</property>
-            <property name="yalign">0.10000000149011612</property>
+            <property name="xalign">0.9</property>
+            <property name="yalign">0.1</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
@@ -88,7 +88,7 @@
           <object class="GtkLabel" id="SpeedUnit">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="yalign">0.89999997615814209</property>
+            <property name="yalign">0.9</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
@@ -102,8 +102,8 @@
           <object class="GtkLabel" id="SOC">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.89999997615814209</property>
-            <property name="yalign">0.89999997615814209</property>
+            <property name="xalign">0.9</property>
+            <property name="yalign">0.9</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
@@ -123,7 +123,7 @@
               <object class="GtkLabel" id="P">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="yalign">0.89999997615814209</property>
+                <property name="yalign">0.9</property>
                 <property name="label" translatable="yes">label</property>
               </object>
             </child>
@@ -131,7 +131,7 @@
               <object class="GtkLabel" id="R">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="yalign">0.89999997615814209</property>
+                <property name="yalign">0.9</property>
                 <property name="label" translatable="yes">label</property>
               </object>
               <packing>
@@ -143,7 +143,7 @@
               <object class="GtkLabel" id="N">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="yalign">0.89999997615814209</property>
+                <property name="yalign">0.9</property>
                 <property name="label" translatable="yes">label</property>
               </object>
               <packing>
@@ -155,7 +155,7 @@
               <object class="GtkLabel" id="D">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="yalign">0.89999997615814209</property>
+                <property name="yalign">0.9</property>
                 <property name="label" translatable="yes">label</property>
               </object>
               <packing>

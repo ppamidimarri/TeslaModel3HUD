@@ -4,7 +4,7 @@ Head-Up Display for the Tesla Model 3 using a Raspberry Pi and CAN data captured
 ## Features
 This HUD displays similar information to what is shown on the top left of the Tesla Model 3's display. 
 
-* Current date and time, converted from UTC to local time on the Pi at the beginning of the drive
+* Current date and time, converted from UTC to local time at the beginning of the drive
 * Current speed when driving, "P" when parked, "H" when brake hold is active
 * Current "gear" state (i.e. P/R/N/D)
 * Current state-of-charge in percentage 
@@ -29,6 +29,20 @@ To-do wishlist (not sure if these are all possible using CAN data):
 * [Raspbian Stretch Lite](https://downloads.raspberrypi.org/raspbian_lite_latest)
 * [unclutter](https://wiki.archlinux.org/index.php/unclutter)
 * [PyGObject](https://pygobject.readthedocs.io/en/latest/index.html)
+
+## Pictures
+
+HUD in action
+![HUD in action](https://i.imgur.com/tpscMLz.jpg)
+
+Close-up of driver's view of HUD
+![Close-up of driver's view of HUD](https://i.imgur.com/9UdMikN.jpg)
+
+Side view of monitor and mirror mounts
+![Side view of mounts](https://thingiverse-production-new.s3.amazonaws.com/assets/ca/d1/42/7c/10/IMG_20190316_120601.jpg)
+
+Close front view of HUD
+![Close front view of HUD](https://thingiverse-production-new.s3.amazonaws.com/assets/f6/e7/c7/c6/02/IMG_20190316_121405.jpg)
 
 ## Thanks
 This project owes a lot to the following people who helped me:

@@ -13,11 +13,6 @@ class CANReader:
 		self.soc = 0
 		self.timestamp = datetime.datetime.utcnow()
 		self.battery_capacity = 0
-#		self.batt_cap_ful = 0
-#		self.batt_cap_rem = 0
-#		self.batt_cap_exp = 0
-#		self.batt_cap_idl = 0
-#		self.batt_cap_buf = 0
 
 		if log_level is None:
 			self.log_level = LOG_LEVEL

@@ -35,8 +35,8 @@ To-do wishlist (not sure if these are all possible using CAN data):
 HUD in action
 ![HUD in action](https://i.imgur.com/tpscMLz.jpg)
 
-Driver's view of HUD
-![Driver's view of HUD](https://i.imgur.com/9UdMikN.jpg)
+Close-up of driver's view of HUD
+![Close-up of driver's view of HUD](https://i.imgur.com/9UdMikN.jpg)
 
 Side view of monitor and mirror mounts
 ![Side view of mounts](https://thingiverse-production-new.s3.amazonaws.com/assets/ca/d1/42/7c/10/IMG_20190316_120601.jpg)

@@ -33,10 +33,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="Blank 1">
+          <object class="GtkLabel" id="LeftTurn">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.1</property>
+            <property name="xalign">0.5</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
@@ -58,10 +58,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="Blank 2">
+          <object class="GtkLabel" id="RightTurn">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.9</property>
+            <property name="xalign">0.5</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>

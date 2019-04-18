@@ -13,6 +13,8 @@ class CANReader:
 		self.soc = 0
 		self.timestamp = datetime.datetime.utcnow()
 		self.battery_capacity = 0
+		self.turn_left_on = 0
+		self.turn_right_on = 0
 
 		if log_level is None:
 			self.log_level = LOG_LEVEL
@@ -55,6 +57,8 @@ class CANReader:
 						self.soc = self.process_soc_signal(frame[9], frame[10])
 					elif frame_id == 0x352 and mlen > 15: 	# Battery Capacity
 						self.process_battery_capacity_signal(frame[9:])
+					elif frame_id == 0x3F1 and mlen > 15:	# Turn signals
+						self.process_turn_signal(frame[15])
 					else:
 #						self.log(2, "Unknown Frame ID: {0:03x}, {1}".format(frame_id, self.format_frame(frame[9:])))
 						pass
@@ -66,6 +70,12 @@ class CANReader:
 					break
 
 	# Process various CAN messages to extract relevant data
+
+	def process_turn_signal(self, byte):
+		binary = "{0:08b}".format(byte)
+		self.turn_left_on = int(binary[5], 2)
+		self.turn_right_on = int(binary[3], 2)
+		self.log(3, "Left: {0}, Right: {1}, Full: {2}".format(self.turn_left_on, self.turn_right_on, binary))
 
 	def process_battery_capacity_signal(self, bytes):
 		signal = ""
@@ -167,3 +177,9 @@ class CANReader:
 
 	def get_battery_capacity(self):
 		return self.battery_capacity
+
+	def get_turn_left_on(self):
+		return self.turn_left_on
+
+	def get_turn_right_on(self):
+		return self.turn_right_on

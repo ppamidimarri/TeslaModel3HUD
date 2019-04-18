@@ -18,6 +18,7 @@ class HeadUpDisplay(Gtk.Window):
 		self.time_markup = "<span font='20' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
 		self.date_markup = "<span font='20' face='" + self.font_face + "' color='{0}'>{1}</span>"
 		self.soc_markup = "<span font='20' face='" + self.font_face + "' color='{0}'>{1:.0f}%</span>"
+		self.turn_markup = "<span font='60' face='" + self.font_face + "' color='{0}'>{1}</span>"
 		self.time_format = "%-I:%M %p"
 		self.date_format = "%a, %b %-d"
 		self.utc_offset = datetime.utcnow() - datetime.now()
@@ -37,8 +38,6 @@ class HeadUpDisplay(Gtk.Window):
 		self.builder.get_object("R").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "R"))
 		self.builder.get_object("N").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "N"))
 		self.builder.get_object("D").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "D"))
-		self.builder.get_object("Blank 1").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
-		self.builder.get_object("Blank 2").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
 		self.builder.get_object("Blank 3").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
 
 		self.update_data()
@@ -59,6 +58,20 @@ class HeadUpDisplay(Gtk.Window):
 
 		self.update_speed(speed, hold, gear)
 		self.update_gear(self.reader.get_gear())
+		self.update_turns(self.reader.get_turn_left_on(), self.reader.get_turn_right_on())
+
+		return True
+
+	def update_turns(self, left, right):
+		if left:
+			self.builder.get_object("LeftTurn").set_markup(self.turn_markup.format(self.get_turn_color(), "\u2b05"))
+		else:
+			self.builder.get_object("LeftTurn").set_markup(self.turn_markup.format(self.get_text_color(), ""))
+
+		if right:
+			self.builder.get_object("RightTurn").set_markup(self.turn_markup.format(self.get_turn_color(), "\u27a1"))
+		else:
+			self.builder.get_object("RightTurn").set_markup(self.turn_markup.format(self.get_text_color(), ""))
 
 		return True
 
@@ -105,16 +118,19 @@ class HeadUpDisplay(Gtk.Window):
 		return self.get_active_text_color()
 
 	def get_passive_text_color(self):
-		return "#666666"
+		return "#444444"
 
 	def get_inactive_text_color(self):
-		return "#888888"
+		return "#666666"
 
 	def get_active_text_color(self):
 		return "#FFFFFF"
 
+	def get_turn_color(self):
+		return "green"
+
 	def start_updater(self):
-		GObject.timeout_add(500, self.update_data)
+		GObject.timeout_add(333, self.update_data)
 
 	def get_local_timestamp(self):
 		return self.reader.get_timestamp() - self.utc_offset

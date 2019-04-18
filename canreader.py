@@ -12,11 +12,12 @@ class CANReader:
 		self.brake_hold = 0
 		self.soc = 0
 		self.timestamp = datetime.datetime.utcnow()
-		self.batt_cap_ful = 0
-		self.batt_cap_rem = 0
-		self.batt_cap_exp = 0
-		self.batt_cap_idl = 0
-		self.batt_cap_buf = 0
+		self.battery_capacity = 0
+#		self.batt_cap_ful = 0
+#		self.batt_cap_rem = 0
+#		self.batt_cap_exp = 0
+#		self.batt_cap_idl = 0
+#		self.batt_cap_buf = 0
 
 		if log_level is None:
 			self.log_level = LOG_LEVEL
@@ -49,15 +50,15 @@ class CANReader:
 				mlen = len(frame)
 				if mlen > 8:
 					frame_id = frame[4] + 256 * (frame[5] + 256 * (frame[6] + 256 * frame[7]))
-					if frame_id == 0x257 and mlen > 12: # UI speed
+					if frame_id == 0x257 and mlen > 12: 	# UI speed
 						self.speed = frame[12]
-					elif frame_id == 0x118 and mlen > 12: # Gear and Brake Hold status
+					elif frame_id == 0x118 and mlen > 12: 	# Gear and Brake Hold status
 						self.process_drive_state_signal(frame[11], frame[12])
-					elif frame_id == 0x318 and mlen > 14: # UTC Timestamp
+					elif frame_id == 0x318 and mlen > 14: 	# UTC Timestamp
 						self.process_timestamp_signal(frame[9:])
-					elif frame_id == 0x292 and mlen > 10: # State of Charge
+					elif frame_id == 0x292 and mlen > 10: 	# State of Charge
 						self.soc = self.process_soc_signal(frame[9], frame[10])
-					elif frame_id == 0x352 and mlen > 15: # Battery Capacity
+					elif frame_id == 0x352 and mlen > 15: 	# Battery Capacity
 						self.process_battery_capacity_signal(frame[9:])
 					else:
 #						self.log(2, "Unknown Frame ID: {0:03x}, {1}".format(frame_id, self.format_frame(frame[9:])))
@@ -75,11 +76,13 @@ class CANReader:
 		signal = ""
 		for b in reversed(bytes):
 			signal += "{0:08b}".format(b)
-		self.batt_cap_ful = int(signal[-10:], 2)/10
-		self.batt_cap_rem = int(signal[-20:-10], 2)/10
-		self.batt_cap_exp = int(signal[-30:-20], 2)/10
-		self.batt_cap_idl = int(signal[-40:-30], 2)/10
-		self.batt_cap_buf = int(signal[-58:-50], 2)/10
+		full = int(signal[-10:], 2)/10
+		remaining = int(signal[-20:-10], 2)/10
+		expected = int(signal[-30:-20], 2)/10
+		ideal = int(signal[-40:-30], 2)/10
+		buffer = int(signal[-58:-50], 2)/10
+		if full != 0:
+			self.battery_capacity = 100*(remaining-buffer)/(full-buffer)
 
 	def process_timestamp_signal(self, bytes):
 		year = bytes[0] + 2000
@@ -167,14 +170,5 @@ class CANReader:
 	def get_timestamp(self):
 		return self.timestamp
 
-	def get_latitude(self):
-		return self.latitude
-
-	def get_longitude(self):
-		return self.longitude
-
 	def get_battery_capacity(self):
-		soc = 0
-		if self.batt_cap_ful != 0:
-			soc = 100*(self.batt_cap_rem - self.batt_cap_buf)/(self.batt_cap_ful - self.batt_cap_buf)
-		return soc
+		return self.battery_capacity

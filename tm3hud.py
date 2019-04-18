@@ -28,7 +28,7 @@ class HeadUpDisplay(Gtk.Window):
 		settings.set_property("gtk-theme-name", "Adwaita-dark")
 
 		self.builder = Gtk.Builder()
-		self.builder.add_from_file("/home/pi/hud/hud.glade")
+		self.builder.add_from_file("/home/pi/TeslaModel3HUD/hud.glade")
 		self.builder.get_object("mainPanel").override_background_color(
 			Gtk.StateType.NORMAL, Gdk.RGBA(0,0,0,1))
 		self.builder.get_object("mainPanel").connect("destroy", self.on_destroy)

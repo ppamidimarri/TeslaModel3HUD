@@ -29,7 +29,7 @@ To-do wishlist (not sure if these are all possible using CAN data):
 The Jetson Nano is more expensive, but it can handle 5-10 times higher screen refres rates than the RPi. This can make for a nicer experience with the speed updating real-time when accelerating, or the turn signal indicators blinking in alignment with the car display. Please note that the Jetson Nano does not have onboard Wi-Fi, so you will need to pull it out of the car for troubleshooting or changes. If you want Wi-Fi on the Jetson Nano, you will need a [USB adapter like this one](https://smile.amazon.com/gp/product/B003MTTJOY/). 
 
 ## Software
-* [Raspbian Stretch Lite](https://downloads.raspberrypi.org/raspbian_lite_latest) if using a Raspberry Pi
+* [Raspbian Stretch Desktop](https://downloads.raspberrypi.org/raspbian_latest) if using a Raspberry Pi
 * [Linux4Tegra](http://developer.nvidia.com/embedded/dlc/jetson-nano-dev-kit-sd-card-image) if using a Jetson Nano
 * [unclutter](https://wiki.archlinux.org/index.php/unclutter)
 * [PyGObject](https://pygobject.readthedocs.io/en/latest/index.html)

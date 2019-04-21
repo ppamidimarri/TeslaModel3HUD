@@ -26,18 +26,64 @@ To-do wishlist (not sure if these are all possible using CAN data):
 * [Car power cable for the monitor](https://smile.amazon.com/gp/product/B07BSFSW8N/)
 * [5V, 2A car power cable](https://smile.amazon.com/gp/product/B075XMTQJC/) for the Pi with a switch
 
+The Jetson Nano is more expensive, but it can handle 5-10 times higher screen refres rates than the RPi. This can make for a nicer experience with the speed updating real-time when accelerating, or the turn signal indicators blinking in alignment with the car display. Please note that the Jetson Nano does not have onboard Wi-Fi, so you will need to pull it out of the car for troubleshooting or changes. If you want Wi-Fi on the Jetson Nano, you will need a [USB adapter like this one](https://smile.amazon.com/gp/product/B003MTTJOY/). 
+
 ## Software
-* [Raspbian Stretch Lite](https://downloads.raspberrypi.org/raspbian_lite_latest)
+* [Raspbian Stretch Lite](https://downloads.raspberrypi.org/raspbian_lite_latest) if using a Raspberry Pi
+* [Linux4Tegra](http://developer.nvidia.com/embedded/dlc/jetson-nano-dev-kit-sd-card-image) if using a Jetson Nano
 * [unclutter](https://wiki.archlinux.org/index.php/unclutter)
 * [PyGObject](https://pygobject.readthedocs.io/en/latest/index.html)
 
 ## Instructions
 
-** To be updated **
-Get a Raspberry Pi 3B+ with Raspbian Lite
+Connect up the Pi or Nano with your LCD monitor and a USB keyboard. 
 
-sudo apt install git python3-pip unclutter
-pip3 install pyserial
+Get the Raspberry Pi 3B+ loaded with Raspbian Desktop, or the Jetson Nano with the initial image of L4T. You can remove packages like LibreOffice and Mathematica as we don't need them.
+
+If you use the Jetson Nano, switch to the GNOME Desktop (instead of the default Unity Desktop that L4T comes with). You can do this by clicking on the settings icon at the login screen. In the Jetson Nano, you also need to auto-hide the Dock and install the GNOME extension "Hide Top Bar". 
+
+Install the needed software:
+* `sudo apt install git python3-pip unclutter`
+* `pip3 install pyserial`
+* Download 'Gotham Book' font and put the TTF file in `.fonts` in your home directory
+
+Clone this project and get it running:
+* `git clone https://github.com/ppamidimarri/TeslaModel3HUD`
+* `chmod +x serial_test.py reader_test.py tm3hud.py`
+
+Connect the CAN harness to the USB port and check that `/dev/ttyUSB0` is now available. On the Jetson Nano, you need to add your account to the group `dialout` if you want to run the HUD application without `sudo`. If your device has a different path, you need to update `serial_test.py` and `canreader.py` with that path. 
+
+Open a terminal and try to run serial_test.py. You should see a bunch of CAN messages. Then try to run reader_test.py, you should see summary results like speed, state-of-charge, etc. 
+
+If both run OK, check the path to `hud.glade` inside the `tm3hud.py` file and update it as needed. You are now all set to run the GUI with tm3hud.py. Test this now, it should run in full-screen mode. 
+
+Now it is time to set the HUD to start up on boot. The steps are different for each device.
+
+**Raspberry Pi**
+We have to edit two configuration files.
+
+`sudo nano /etc/xdg/lxsession/LXDE-pi/autostart`, remove the `xscreensaver` line and add:
+```
+@xset s off
+@xset -dpms
+@xset s noblank
+@/home/pi/TeslaModel3HUD/tm3hud.py
+```
+
+`sudo nano /boot/config,txt`, and at the end, add:
+```
+display_rotate=0x10000
+```
+
+If you are using a Pi, reduce the screen refresh rate by looking for the line that contains `GObject.timeout_add` and increase the number. This is what works best for me in my testing:
+```
+GObject.timeout_add(500, self.update_data)
+```
+
+**Jetson Nano**
+Disable the screensaver and screen off options. Under Activities, search for Startup activities. Add two new startup activities:
+* `xrandr -x` to reflect the display
+* Path to tm3hud.py, so start the HUD GUI 
 
 ## Pictures
 

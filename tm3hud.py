@@ -10,7 +10,7 @@ import canreader
 class HeadUpDisplay(Gtk.Window):
 	def __init__(self):
 		self.font_face = 'Gotham'
-		self.speed_markup = "<span font='120' face='" + self.font_face + "' color='{0}' font_features='tnum=1,lnum=1'>{1}</span>"
+		self.speed_markup = "<span font='100' face='" + self.font_face + "' color='{0}' font_features='tnum=1,lnum=1'>{1}</span>"
 		self.unit_markup = "<span font='20' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
 		self.gear_active_markup = "<span font='20' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
 		self.gear_inactive_markup = "<span font='20' face='" + self.font_face + "' color='{0}'>{1}</span>"
@@ -29,7 +29,7 @@ class HeadUpDisplay(Gtk.Window):
 		settings.set_property("gtk-theme-name", "Adwaita-dark")
 
 		self.builder = Gtk.Builder()
-		self.builder.add_from_file("/home/pi/TeslaModel3HUD/hud.glade")
+		self.builder.add_from_file("/home/pavan/TeslaModel3HUD/hud.glade")
 		self.builder.get_object("mainPanel").override_background_color(
 			Gtk.StateType.NORMAL, Gdk.RGBA(0,0,0,1))
 		self.builder.get_object("mainPanel").connect("destroy", self.on_destroy)
@@ -127,10 +127,10 @@ class HeadUpDisplay(Gtk.Window):
 		return "#FFFFFF"
 
 	def get_turn_color(self):
-		return "green"
+		return "#44FF44"
 
 	def start_updater(self):
-		GObject.timeout_add(333, self.update_data)
+		GObject.timeout_add(30, self.update_data)
 
 	def get_local_timestamp(self):
 		return self.reader.get_timestamp() - self.utc_offset
@@ -142,7 +142,8 @@ class HeadUpDisplay(Gtk.Window):
 hud = HeadUpDisplay()
 window = hud.builder.get_object("mainPanel")
 window.fullscreen()
-window.show_all()
+window.resize(800, 480)
 hud.start_updater()
+window.show_all()
 
 Gtk.main()

@@ -75,7 +75,6 @@ class CANReader:
 		binary = "{0:08b}".format(byte)
 		self.turn_left_on = int(binary[5], 2)
 		self.turn_right_on = int(binary[3], 2)
-		self.log(3, "Left: {0}, Right: {1}, Full: {2}".format(self.turn_left_on, self.turn_right_on, binary))
 
 	def process_battery_capacity_signal(self, bytes):
 		signal = ""

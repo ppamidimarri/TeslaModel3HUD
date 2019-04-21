@@ -19,16 +19,24 @@ To-do wishlist (not sure if these are all possible using CAN data):
 * [Raspberry Pi 3B+](https://smile.amazon.com/gp/product/B07BDR5PDW/)
 * Sunlight-readable display, e.g. [Newhaven Display NHD-7.0-HDMI-N-RSXN-CTU](http://www.newhavendisplay.com/nhd70hdminrsxnctu-p-9552.html)
 * CAN harness for the Tesla Model 3, I am using [this one](http://store.evtv.me/proddetail.php?prod=TeslaModel3CANKit)
-* [Beamsplitter mirror of the right dimensions to suit your setup](https://telepromptermirror.com/glass-teleprompter-mirror/)
+* [Beamsplitter mirror](https://telepromptermirror.com/glass-teleprompter-mirror/), 87mm x 157mm, thickness 1/8", transparency 30R/70T, rounded corners
 * [3D printed mounts](https://www.thingiverse.com/thing:3496105) to place your monitor and mirror in the right place for driver's line-of-sight in the car
-* HDMI cable long enough to go from the place you store the Pi to the monitor
-* Compatible car power cable for the monitor you choose (I used [this one](https://smile.amazon.com/gp/product/B07BSFSW8N/))
-* 5V, 2A car power cable for the Pi
+* [Car 12V power splitter](https://smile.amazon.com/gp/product/B07CM7PJQB/) to power the Pi and the monitor, while leaving a 12V socket open for other devices
+* [HDMI cable](https://smile.amazon.com/gp/product/B01JO9T43G/) at least 6 feet long
+* [Car power cable for the monitor](https://smile.amazon.com/gp/product/B07BSFSW8N/)
+* [5V, 2A car power cable](https://smile.amazon.com/gp/product/B075XMTQJC/) for the Pi with a switch
 
 ## Software
 * [Raspbian Stretch Lite](https://downloads.raspberrypi.org/raspbian_lite_latest)
 * [unclutter](https://wiki.archlinux.org/index.php/unclutter)
 * [PyGObject](https://pygobject.readthedocs.io/en/latest/index.html)
+
+## Instructions
+
+Get a Raspberry Pi 3B+ with Raspbian Lite
+
+sudo apt install git python3-pip unclutter
+pip3 install pyserial
 
 ## Pictures
 

@@ -130,7 +130,7 @@ class HeadUpDisplay(Gtk.Window):
 		return "#44FF44"
 
 	def start_updater(self):
-		GObject.timeout_add(30, self.update_data)
+		GObject.timeout_add(100, self.update_data)
 
 	def get_local_timestamp(self):
 		return self.reader.get_timestamp() - self.utc_offset

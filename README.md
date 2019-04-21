@@ -55,7 +55,7 @@ Connect the CAN harness to the USB port and check that `/dev/ttyUSB0` is now ava
 
 Open a terminal and try to run `serial_test.py`. You should see a bunch of CAN messages. Then try to run `reader_test.py`, you should see summary results like speed, state-of-charge, etc. 
 
-If both these tests run OK, check the path to `hud.glade` inside the `tm3hud.py` file and update it as needed. You can now test the GUI with `tm3hud.py`. It should run in full-screen mode. 
+If both these tests run OK, check the path to `hud.glade` inside the `tm3hud.py` file and update it if needed. You can now test the GUI with `tm3hud.py`. It should run in full-screen mode. 
 
 If your GUI is starting in full-screen mode, it is time to set the HUD to start up on boot. The steps are different for each device.
 
@@ -76,7 +76,7 @@ We have to edit two configuration files.
 display_rotate=0x10000
 ```
 
-If you are using a Pi, reduce the screen refresh rate by looking for the line that contains `GObject.timeout_add` and increase the number. This is what works best for me in my testing:
+If you are using a Pi, reduce the screen refresh rate by looking in `tm3hud.py` for the line that contains `GObject.timeout_add` and increase the number. This is what works best for me in my testing:
 ```
 GObject.timeout_add(500, self.update_data)
 ```

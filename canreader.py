@@ -1,6 +1,6 @@
 import serial, threading, datetime
 
-LOG_LEVEL = 1 # 1=errors, 2=info, 3=debug
+LOG_LEVEL = 0 # 1=errors, 2=info, 3=debug
 
 class CANReader:
 	def __init__(self, port="/dev/ttyUSB0", baudrate=1000000, log_level=None):

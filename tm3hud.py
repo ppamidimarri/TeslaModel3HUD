@@ -10,15 +10,18 @@ import canreader
 class HeadUpDisplay(Gtk.Window):
 	def __init__(self):
 		self.font_face = 'Gotham'
-		self.speed_markup = "<span font='100' face='" + self.font_face + "' color='{0}' font_features='tnum=1,lnum=1'>{1}</span>"
-		self.unit_markup = "<span font='20' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
-		self.gear_active_markup = "<span font='20' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
-		self.gear_inactive_markup = "<span font='20' face='" + self.font_face + "' color='{0}'>{1}</span>"
-		self.hold_markup = "<span font='20' face='" + self.font_face + "' color='{0}'>{1}</span>"
-		self.time_markup = "<span font='20' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
-		self.date_markup = "<span font='20' face='" + self.font_face + "' color='{0}'>{1}</span>"
-		self.soc_markup = "<span font='20' face='" + self.font_face + "' color='{0}'>{1:.0f}%</span>"
-		self.turn_markup = "<span font='60' face='" + self.font_face + "' color='{0}'>{1}</span>"
+		self.speed_font_size = '108'
+		self.turn_font_size = '36'
+		self.other_font_size = '18'
+		self.speed_markup = "<span font='" + self.speed_font_size + "' face='" + self.font_face + "' color='{0}' font_features='tnum=1,lnum=1'>{1}</span>"
+		self.unit_markup = "<span font='" + self.other_font_size + "' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
+		self.gear_active_markup = "<span font='" + self.other_font_size + "' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
+		self.gear_inactive_markup = "<span font='" + self.other_font_size + "' face='" + self.font_face + "' color='{0}'>{1}</span>"
+		self.hold_markup = "<span font='" + self.other_font_size + "' face='" + self.font_face + "' color='{0}'>{1}</span>"
+		self.time_markup = "<span font='" + self.other_font_size + "' face='" + self.font_face + "' color='{0}'><b>{1}</b></span>"
+		self.date_markup = "<span font='" + self.other_font_size + "' face='" + self.font_face + "' color='{0}'>{1}</span>"
+		self.soc_markup = "<span font='" + self.other_font_size + "' face='" + self.font_face + "' color='{0}'>{1:.0f}%</span>"
+		self.turn_markup = "<span font='" + self.turn_font_size + "' face='" + self.font_face + "' color='{0}'>{1}</span>"
 		self.time_format = "%-I:%M %p"
 		self.date_format = "%a, %b %-d"
 		self.utc_offset = datetime.utcnow() - datetime.now()
@@ -47,6 +50,7 @@ class HeadUpDisplay(Gtk.Window):
 		speed = self.reader.get_speed()
 		gear = self.reader.get_gear()
 		hold = self.reader.get_brake_hold()
+		state = self.reader.get_drive_state()
 		soc = self.reader.get_battery_capacity()
 		stamp = self.get_local_timestamp()
 
@@ -54,10 +58,10 @@ class HeadUpDisplay(Gtk.Window):
 		self.builder.get_object("Time").set_markup(
 			self.time_markup.format(self.get_text_color(), stamp.strftime(self.time_format).upper()))
 		self.builder.get_object("Date").set_markup(
-			self.hold_markup.format(self.get_text_color(), stamp.strftime(self.date_format)))
+			self.date_markup.format(self.get_text_color(), stamp.strftime(self.date_format)))
 
-		self.update_speed(speed, hold, gear)
-		self.update_gear(self.reader.get_gear())
+		self.update_speed(speed, hold, gear, state)
+		self.update_gear(gear, state)
 		self.update_turns(self.reader.get_turn_left_on(), self.reader.get_turn_right_on())
 
 		return True
@@ -75,8 +79,8 @@ class HeadUpDisplay(Gtk.Window):
 
 		return True
 
-	def update_speed(self, speed, hold, gear):
-		if gear == "P":
+	def update_speed(self, speed, hold, gear, state):
+		if state == "Park" or gear == "P":
 			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), "P"))
 			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), ""))
 		elif hold and speed == 0:
@@ -87,8 +91,8 @@ class HeadUpDisplay(Gtk.Window):
 			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "MPH"))
 		return True
 
-	def update_gear(self, gear):
-		if gear == "P":
+	def update_gear(self, gear, state):
+		if state == "Park" or gear == "P":
 			self.builder.get_object("P").set_markup(self.gear_active_markup.format(self.get_active_text_color(), "P"))
 			self.builder.get_object("R").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "R"))
 			self.builder.get_object("N").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "N"))

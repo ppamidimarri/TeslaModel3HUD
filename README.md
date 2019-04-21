@@ -51,18 +51,19 @@ Clone this project and get it running:
 * `git clone https://github.com/ppamidimarri/TeslaModel3HUD`
 * `chmod +x serial_test.py reader_test.py tm3hud.py`
 
-Connect the CAN harness to the USB port and check that `/dev/ttyUSB0` is now available. On the Jetson Nano, you need to add your account to the group `dialout` if you want to run the HUD application without `sudo`. If your device has a different path, you need to update `serial_test.py` and `canreader.py` with that path. 
+Connect the CAN harness to the USB port and check that `/dev/ttyUSB0` is now available. If your CAN device shows up with a different path than `/dev/ttyUSB0`, you need to update `serial_test.py` and `canreader.py` with that path. On the Jetson Nano, you need to add your account to the group `dialout` if you want to run the HUD application without `sudo`. 
 
-Open a terminal and try to run serial_test.py. You should see a bunch of CAN messages. Then try to run reader_test.py, you should see summary results like speed, state-of-charge, etc. 
+Open a terminal and try to run `serial_test.py`. You should see a bunch of CAN messages. Then try to run `reader_test.py`, you should see summary results like speed, state-of-charge, etc. 
 
-If both run OK, check the path to `hud.glade` inside the `tm3hud.py` file and update it as needed. You are now all set to run the GUI with tm3hud.py. Test this now, it should run in full-screen mode. 
+If both these tests run OK, check the path to `hud.glade` inside the `tm3hud.py` file and update it as needed. You can now test the GUI with `tm3hud.py`. It should run in full-screen mode. 
 
-Now it is time to set the HUD to start up on boot. The steps are different for each device.
+If your GUI is starting in full-screen mode, it is time to set the HUD to start up on boot. The steps are different for each device.
 
 **Raspberry Pi**
+
 We have to edit two configuration files.
 
-`sudo nano /etc/xdg/lxsession/LXDE-pi/autostart`, remove the `xscreensaver` line and add:
+`sudo nano /etc/xdg/lxsession/LXDE-pi/autostart`, remove the `@xscreensaver` line, and add:
 ```
 @xset s off
 @xset -dpms
@@ -81,9 +82,14 @@ GObject.timeout_add(500, self.update_data)
 ```
 
 **Jetson Nano**
-Disable the screensaver and screen off options. Under Activities, search for Startup activities. Add two new startup activities:
+
+Disable the screensaver and screen off options. 
+
+Under Activities, search for Startup activities. Add two new startup activities:
 * `xrandr -x` to reflect the display
-* Path to tm3hud.py, so start the HUD GUI 
+* Full path to tm3hud.py, to start the HUD GUI
+
+Now restart your device with `sudo reboot` and the GUI should start up! 
 
 ## Pictures
 

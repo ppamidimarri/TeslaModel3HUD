@@ -16,7 +16,7 @@ To-do wishlist (not sure if these are all possible using CAN data):
 * Current TACC speed if cruise is enabled
 
 ## Hardware
-* [Raspberry Pi 3B+](https://smile.amazon.com/gp/product/B07BDR5PDW/)
+* [Raspberry Pi 3B+](https://smile.amazon.com/gp/product/B07BDR5PDW/) or [Nvidia Jetson Nano](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-nano/): performance is better with Jetson Nano
 * Sunlight-readable display, e.g. [Newhaven Display NHD-7.0-HDMI-N-RSXN-CTU](http://www.newhavendisplay.com/nhd70hdminrsxnctu-p-9552.html)
 * CAN harness for the Tesla Model 3, I am using [this one](http://store.evtv.me/proddetail.php?prod=TeslaModel3CANKit)
 * [Beamsplitter mirror](https://telepromptermirror.com/glass-teleprompter-mirror/), 87mm x 157mm, thickness 1/8", transparency 30R/70T, rounded corners
@@ -33,6 +33,7 @@ To-do wishlist (not sure if these are all possible using CAN data):
 
 ## Instructions
 
+** To be updated **
 Get a Raspberry Pi 3B+ with Raspbian Lite
 
 sudo apt install git python3-pip unclutter

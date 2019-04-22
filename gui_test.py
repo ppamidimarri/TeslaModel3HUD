@@ -4,8 +4,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GObject, Gdk
 from datetime import datetime
-import subprocess
-import canreader
+import random
 
 class HeadUpDisplay(Gtk.Window):
 	def __init__(self):
@@ -26,8 +25,6 @@ class HeadUpDisplay(Gtk.Window):
 		self.date_format = "%a, %b %-d"
 		self.utc_offset = datetime.utcnow() - datetime.now()
 
-		self.reader = canreader.CANReader()
-
 		settings = Gtk.Settings.get_default()
 		settings.set_property("gtk-theme-name", "Adwaita-dark")
 
@@ -45,16 +42,16 @@ class HeadUpDisplay(Gtk.Window):
 		self.builder.get_object("Blank Gear 1").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
 		self.builder.get_object("Blank Gear 2").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
 		self.builder.get_object("Blank Gear 3").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
+#		self.builder.get_object("Blank Gear 4").set_markup(self.hold_markup.format(self.get_inactive_text_color(), ""))
 
 		self.update_data()
-		self.update_system_date()
 
 	def update_data(self):
-		speed = self.reader.get_speed()
-		gear = self.reader.get_gear()
-		hold = self.reader.get_brake_hold()
-		state = self.reader.get_drive_state()
-		soc = self.reader.get_battery_capacity()
+		speed = random.randint(1, 76)
+		gear = "D"
+		hold = random.randint(0, 2)
+		state = "Drive"
+		soc = random.randint(0, 101)
 		stamp = self.get_local_timestamp()
 
 		self.builder.get_object("SOC").set_markup(self.soc_markup.format(self.get_text_color(), soc))
@@ -65,7 +62,7 @@ class HeadUpDisplay(Gtk.Window):
 
 		self.update_speed(speed, hold, gear, state)
 		self.update_gear(gear, state)
-		self.update_turns(self.reader.get_turn_left_on(), self.reader.get_turn_right_on())
+		self.update_turns(random.randint(0, 2), random.randint(0, 2))
 
 		return True
 
@@ -117,10 +114,6 @@ class HeadUpDisplay(Gtk.Window):
 			self.builder.get_object("D").set_markup(self.gear_active_markup.format(self.get_active_text_color(), "D"))
 		return True
 
-	def update_system_date(self):
-		stamp = self.reader.get_timestamp()
-		ret_val = subprocess.call('sudo date -u --set="{0}"'.format(stamp.strftime("%Y%m%d %H:%M:%S")), shell=True)
-
 	def get_text_color(self):
 		return self.get_active_text_color()
 
@@ -140,16 +133,16 @@ class HeadUpDisplay(Gtk.Window):
 		GObject.timeout_add(100, self.update_data)
 
 	def get_local_timestamp(self):
-		return self.reader.get_timestamp() - self.utc_offset
+		return datetime.utcnow() - self.utc_offset
 
 	def on_destroy(self, widget, data=None):
-		self.reader.close()
 		Gtk.main_quit()
 
 hud = HeadUpDisplay()
 window = hud.builder.get_object("mainPanel")
 window.fullscreen()
 window.resize(800, 480)
+window.set_position(Gtk.WindowPosition.CENTER)
 hud.start_updater()
 window.show_all()
 

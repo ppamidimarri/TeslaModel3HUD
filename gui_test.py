@@ -85,7 +85,7 @@ class HeadUpDisplay(Gtk.Window):
 			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), ""))
 		elif hold and speed == 0:
 			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), "H"))
-			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), ""))
+			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "HOLD"))
 		else:
 			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), speed))
 			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "MPH"))

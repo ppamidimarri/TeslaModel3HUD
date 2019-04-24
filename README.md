@@ -49,13 +49,13 @@ Install the needed software:
 
 Clone this project and get it running:
 * `git clone https://github.com/ppamidimarri/TeslaModel3HUD`
-* `chmod +x serial_test.py reader_test.py tm3hud.py`
+* `chmod +x serial_test.py reader_test.py tm3hud.py gui_test.py`
 
 Connect the CAN harness to the USB port and check that `/dev/ttyUSB0` is now available. If your CAN device shows up with a different path than `/dev/ttyUSB0`, you need to update `serial_test.py` and `canreader.py` with that path. On the Jetson Nano, you need to add your account to the group `dialout` if you want to run the HUD application without `sudo`. 
 
 Open a terminal and try to run `serial_test.py`. You should see a bunch of CAN messages. Then try to run `reader_test.py`, you should see summary results like speed, state-of-charge, etc. 
 
-If both these tests run OK, check the path to `hud.glade` inside the `tm3hud.py` file and update it if needed. You can now test the GUI with `tm3hud.py`. It should run in full-screen mode. 
+If both these tests run OK, check the path to `hud.glade` inside the `tm3hud.py` and `gui_test.py` files and update them if needed. You can now test the GUI with `tm3hud.py`. It should run in full-screen mode. If you want to test just the GUI layout without real data from the CAN harness, you can run `gui_test.py`. This is useful when your Pi or Nano is not connected to the CAN harness in the car. 
 
 If your GUI is starting in full-screen mode, it is time to set the HUD to start up on boot. The steps are different for each device.
 

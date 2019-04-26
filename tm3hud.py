@@ -26,6 +26,7 @@ class HeadUpDisplay(Gtk.Window):
 		self.date_format = "%a, %b %-d"
 		self.utc_offset = datetime.utcnow() - datetime.now()
 		self.current_speed = 0
+		self.gear_values = ["P", "R", "N", "D"]
 
 		self.reader = canreader.CANReader()
 
@@ -84,9 +85,12 @@ class HeadUpDisplay(Gtk.Window):
 		return True
 
 	def update_speed(self, speed, hold, gear, state):
-		if state == "Park" or gear == "P":
+		if state == "Park" or state == "Idle" or gear == "P":
 			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), "P"))
 			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), ""))
+		elif state == "Charge":
+			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), "C"))
+			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "PLUGGED IN"))
 		elif hold and speed == 0:
 			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), "H"))
 			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "HOLD"))
@@ -98,26 +102,19 @@ class HeadUpDisplay(Gtk.Window):
 		return True
 
 	def update_gear(self, gear, state):
-		if state == "Park" or gear == "P":
-			self.builder.get_object("P").set_markup(self.gear_active_markup.format(self.get_active_text_color(), "P"))
-			self.builder.get_object("R").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "R"))
-			self.builder.get_object("N").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "N"))
-			self.builder.get_object("D").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "D"))
-		elif gear == "R":
-			self.builder.get_object("P").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "P"))
-			self.builder.get_object("R").set_markup(self.gear_active_markup.format(self.get_active_text_color(), "R"))
-			self.builder.get_object("N").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "N"))
-			self.builder.get_object("D").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "D"))
-		elif gear == "N":
-			self.builder.get_object("P").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "P"))
-			self.builder.get_object("R").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "R"))
-			self.builder.get_object("N").set_markup(self.gear_active_markup.format(self.get_active_text_color(), "N"))
-			self.builder.get_object("D").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "D"))
-		elif gear == "D":
-			self.builder.get_object("P").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "P"))
-			self.builder.get_object("R").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "R"))
-			self.builder.get_object("N").set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), "N"))
-			self.builder.get_object("D").set_markup(self.gear_active_markup.format(self.get_active_text_color(), "D"))
+		if state == "Drive":
+			self.set_gear_value(gear)
+		else:
+			self.set_gear_value("P")
+
+		return True
+
+	def set_gear_value(self, value):
+		for item in self.gear_values:
+			if value == item:
+				self.builder.get_object(item).set_markup(self.gear_active_markup.format(self.get_active_text_color(), item))
+			else:
+				self.builder.get_object(item).set_markup(self.gear_inactive_markup.format(self.get_inactive_text_color(), item))
 		return True
 
 	def update_system_date(self):
@@ -128,7 +125,7 @@ class HeadUpDisplay(Gtk.Window):
 		return self.get_active_text_color()
 
 	def get_passive_text_color(self):
-		return "#444444"
+		return "#555555"
 
 	def get_inactive_text_color(self):
 		return "#666666"

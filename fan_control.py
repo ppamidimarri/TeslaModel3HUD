@@ -25,7 +25,7 @@ class FanController:
 		return True
 
 	def turn_fan_off(self):
-		subprocess.call('echo 255 > {0}'.format(self.fan_filename), shell=True)
+		subprocess.call('echo 0 > {0}'.format(self.fan_filename), shell=True)
 		return True
 
 	def start_iterating(self):
@@ -42,5 +42,10 @@ class FanController:
 				self.turn_fan_off()
 			time.sleep(600)
 
-controller = FanController()
-controller.start_iterating()
+if __name__ == '__main__':
+	controller = FanController()
+	try:
+		controller.start_iterating()
+	except KeyboardInterrupt:
+		controller.send_stop()
+		time.sleep(600)

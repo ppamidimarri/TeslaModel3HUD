@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import subprocess, threading
+import subprocess, threading, time
 
 class FanController:
 	def __init__(self,
@@ -11,8 +11,6 @@ class FanController:
 
 		self.iterate_thread = threading.Thread(target=self.iterate, args=())
 		self.stop_iterating = False
-		self.iterate_thread.daemon = True
-		self.iterate_thread.start()
 
 		subprocess.call("/usr/bin/jetson_clocks")
 
@@ -30,11 +28,19 @@ class FanController:
 		subprocess.call('echo 255 > {0}'.format(self.fan_filename), shell=True)
 		return True
 
+	def start_iterating(self):
+		self.iterate_thread.start()
+
+	def send_stop(self):
+		self.stop_iterating = True
+
 	def iterate(self):
-		while True:
+		while not self.stop_iterating:
 			if self.get_temperature() > 50:
 				self.turn_fan_on()
 			else:
 				self.turn_fan_off()
+			time.sleep(1)
 
 controller = FanController()
+controller.start_iterating()

@@ -40,7 +40,7 @@ class FanController:
 				self.turn_fan_on()
 			else:
 				self.turn_fan_off()
-			time.sleep(1)
+			time.sleep(600)
 
 controller = FanController()
 controller.start_iterating()

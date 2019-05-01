@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import subprocess, time
+import os, subprocess, time
 
 class FanController:
 	def __init__(self,
@@ -8,7 +8,9 @@ class FanController:
 			fan_device = "/sys/devices/pwm-fan/target_pwm"):
 		self.temperature_filename = temperature_device
 		self.fan_filename = fan_device
-
+		if os.getuid() != 0:
+			print("This application does not work without superuser privileges. Please restart with sudo.")
+			exit()
 		subprocess.call("/usr/bin/jetson_clocks")
 
 	def get_temperature(self):

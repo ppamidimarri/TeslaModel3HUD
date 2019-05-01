@@ -65,8 +65,9 @@ class HeadUpDisplay(Gtk.Window):
 		self.builder.get_object("Date").set_markup(
 			self.date_markup.format(self.get_text_color(), stamp.strftime(self.date_format)))
 
-		self.update_speed(speed, hold, gear, state)
-		self.update_gear(gear, state)
+		if abs(self.current_speed - speed) < 20:
+			self.update_speed(speed, hold, gear, state)
+			self.update_gear(gear, state)
 		self.update_turns(self.reader.get_turn_left_on(), self.reader.get_turn_right_on())
 
 		return True
@@ -95,10 +96,9 @@ class HeadUpDisplay(Gtk.Window):
 			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), "H"))
 			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "HOLD"))
 		else:
-			if abs(self.current_speed - speed) < 20:
-				self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), speed))
-				self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "MPH"))
-				self.current_speed = speed
+			self.builder.get_object("Speed").set_markup(self.speed_markup.format(self.get_text_color(), speed))
+			self.builder.get_object("SpeedUnit").set_markup(self.unit_markup.format(self.get_passive_text_color(), "MPH"))
+			self.current_speed = speed
 		return True
 
 	def update_gear(self, gear, state):

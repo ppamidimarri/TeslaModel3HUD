@@ -6,7 +6,7 @@ class CANReader:
 	def __init__(self, port="/dev/ttyUSB0", baudrate=1000000, log_level=None):
 		self.ser = serial.Serial(port, baudrate)
 		self.sep = b'\xf1\x00'
-		self.speed = "-"
+		self.speed = 0
 		self.gear = 2
 		self.drive_state = 0
 		self.brake_hold = 0

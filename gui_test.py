@@ -62,8 +62,9 @@ class HeadUpDisplay(Gtk.Window):
 		self.builder.get_object("Date").set_markup(
 			self.date_markup.format(self.get_text_color(), stamp.strftime(self.date_format)))
 
-		self.update_speed(speed, hold, gear, state)
-		self.update_gear(gear, state)
+		if abs(self.current_speed - speed) < 20:
+			self.update_speed(speed, hold, gear, state)
+			self.update_gear(gear, state)
 		self.update_turns(random.randint(0, 2), random.randint(0, 2))
 
 		return True
